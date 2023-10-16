@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+<<<<<<< HEAD
 import { useEffect, useState } from 'react'
 import BoardComponent from './Components/BoardComponent'
 import InfoGame from './Components/InfoGame'
@@ -34,17 +35,22 @@ function App() {
       setBoard(board.copyBoard())
     }
   }, [currentPlayer])
+=======
+import { MutableRefObject, useRef, useState } from 'react'
+import Modal from './Components/Modal'
+
+function App() {
+  const [showModal] = useState(true)
+  const inputRef = useRef() as MutableRefObject<HTMLInputElement>
+>>>>>>> 67b93e4 (feat(client): added and styled Modal component)
 
   return (
-    <div className="app">
-      <InfoGame player={currentPlayer} handler={restart} time={300} />
-      <BoardComponent
-        board={board}
-        setBoard={setBoard}
-        currentPlayer={currentPlayer}
-        changePlayer={changePlayer}
-      />
-    </div>
+    <Modal className={showModal ? 'bg-image' : ''} isShow={showModal}>
+      <input type="text" ref={inputRef} placeholder="Enter game id" />
+      <button className="btn" onClick={() => console.log('clicked!')}>
+        Connect
+      </button>
+    </Modal>
   )
 }
 
