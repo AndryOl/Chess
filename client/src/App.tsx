@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 /* eslint-disable react-hooks/exhaustive-deps */
 import { MutableRefObject, useRef, useState } from 'react'
 import Modal from './Components/Modal'
@@ -15,12 +16,17 @@ function App() {
       </button>
 =======
 import { useState } from 'react'
+=======
+import { MutableRefObject, useRef, useState } from 'react'
+>>>>>>> 39bbec5 (chore(client): added processing of connecting to an online game)
 import Modal from './Components/Modal'
 import socket from './helpers/socket'
 
-function App() {
+const App = () => {
   const [showModal] = useState(true)
   const [isNewGame, setIsNewGame] = useState(false)
+  const inputRef = useRef() as MutableRefObject<HTMLInputElement>
+
   const data = [
     { time: '5', name: 'Blitz' },
     { time: '10', name: 'Rapid' },
@@ -28,17 +34,33 @@ function App() {
     { time: '-', name: 'Unlimit' }
   ]
 
+  const connect = () => {
+    if (inputRef.current.value.trim()) {
+      socket.emit('check-token', { token: inputRef.current.value })
+      socket.on('full', () => console.error('room is full'))
+      socket.on('token-invalid', () => console.error('invalid'))
+      socket.on('token-ok', () => console.log('token is ok'))
+    }
+  }
+
   const createGame = (option: (typeof data)[0]) => {
-    socket.emit('start', { time: option.time })
+    socket.emit('create-game', { time: option.time })
     console.log(option)
   }
 
   return (
     <Modal className={showModal ? 'bg-image' : ''} isShow={showModal}>
       {!isNewGame ? (
-        <button className="btn" onClick={() => setIsNewGame(true)}>
-          Create
-        </button>
+        <>
+          <input type="text" ref={inputRef} placeholder="Enter game id" />
+          <button className="btn bg-black" onClick={connect}>
+            Connect
+          </button>
+          <div className="text-center">or</div>
+          <button className="btn bg-green" onClick={() => setIsNewGame(true)}>
+            Create
+          </button>
+        </>
       ) : (
         <>
           <div className="flex">
